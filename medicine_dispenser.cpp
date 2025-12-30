@@ -5,21 +5,12 @@
 #include <stdbool.h>
 #include <math.h>
 #include <string.h>
-
-
-
-
 #include "vex.h"
-
 
 using namespace vex;
 
-
 // Brain should be defined by default
 brain Brain;
-
-
-
 
 // START IQ MACROS
 #define waitUntil(condition)                                                   
@@ -32,9 +23,6 @@ brain Brain;
   for (int iterator = 0; iterator < iterations; iterator++)
 // END IQ MACROS
 
-
-
-
 // Robot configuration code.
 inertial BrainInertial = inertial();
 motor MotorTilt = motor(PORT1, true);
@@ -43,9 +31,6 @@ touchled TouchLED7 = touchled(PORT7);
 bumper Bumper5 = bumper(PORT5);
 motor MotorDrawer = motor(PORT3, true);
 distance Distance6 = distance(PORT6);
-
-
-
 
 // generating and setting random seed
 void initializeRandomSeed(){
@@ -61,33 +46,17 @@ void initializeRandomSeed(){
   srand(seed);
 }
 
-
-
-
-
-
 void vexcodeInit() {
-
-
   // Initializing random seed.
   initializeRandomSeed();
 }
 
-
 #pragma endregion VEXcode Generated Robot Configuration
-
 
 // Include the IQ Library
 #include "iq_cpp.h"
 
-
-// Allows for easier use of the VEX Library
-using namespace vex;
-
-
 //function prototypes
-
-
 void configureAllSensors();
 void waitForTouchLED();
 int setAlarm();
@@ -99,9 +68,7 @@ void drawer(int direction);
 bool generateReport (int countTouchSensor);
 void printReport (bool missedTimes, int numMissedTimes);
 
-
-
-
+//function definitions
 void configureAllSensors(){
   BrainInertial.calibrate();
   wait(2,seconds);
@@ -113,7 +80,6 @@ void configureAllSensors(){
   Brain.Screen.clearScreen();
   Brain.Screen.setFont(mono15);
 }
-
 
 int setAlarm() {
   Brain.Screen.clearScreen();
@@ -129,7 +95,6 @@ int setAlarm() {
   Brain.Screen.setCursor(1,1);
   Brain.Screen.print("Number of hours: %d", num_hours);
   wait(0.5, seconds);
-
 
   while(!TouchLED7.pressing())
   {
@@ -150,10 +115,8 @@ int setAlarm() {
   while(TouchLED7.pressing())
   {}
 
-
   while(!TouchLED7.pressing())
-  {
-     
+  {     
     Brain.Screen.setCursor(1,1);
     Brain.Screen.print("Minutes: %d", num_minutes);
     if(Bumper5.pressing())
@@ -175,31 +138,26 @@ int setAlarm() {
   wait(1, seconds);
   waitForTouchLED();
 
-
   /*
+  For purpose of demo:
   1 minute = 1 second
   1 hour = 5 seconds
   */
   int time_set_in_mins = num_hours*5 + num_minutes;
   return time_set_in_mins;
 }
-
-
 void waitForBumper() {
     while(!Bumper5.pressing())
     {}
     while(Bumper5.pressing())
     {}
 }
-
-
 void waitForTouchLED() {
     while(!TouchLED7.pressing())
     {}
     while(TouchLED7.pressing())
     {}
 }
-
 
 void playAlarm()
 {
@@ -213,27 +171,38 @@ void playAlarm()
   Brain.Screen.newLine();
   Brain.Screen.print("press bumper");
   Brain.Screen.newLine();
+  
+int melody[][3] = {
+  {4, 0, 250},
+  {4, 2, 250},
+  {4, 4, 250},
+  {4, 0, 250},
+  {3, 5, 250},
+  {3, 6, 250},
+  {4, 0, 500},
 
+  {3, 5, 250},
+  {3, 5, 250},
+  {4, 2, 250},
+  {4, 4, 250},
+  {4, 0, 500}
+};
 
-  Brain.playNote(4, 4, 250);
-  Brain.playNote(4, 4, 250);
-  Brain.playNote(4, 2, 250);
-  Brain.playNote(4, 0, 250);
-  Brain.playNote(4, 3, 250);
-  Brain.playNote(4, 2, 250);
-  Brain.playNote(4, 2, 500);
-  Brain.playNote(4, 0, 250);
-  Brain.playNote(4, 2, 250);
-  Brain.playNote(4, 3, 250);
-  Brain.playNote(4, 2, 250);
-  Brain.playNote(4, 0, 500);
+int melodyLength = sizeof(melody) / sizeof(melody[0]);
+
+for (int i = 0; i < melodyLength; i++) {
+  Brain.playNote(
+    melody[i][0], // octave
+    melody[i][1], // note
+    melody[i][2]  // duration
+  );
+}
+
   wait(0.5, seconds);
 }
 
-
 void alertRefill()
 {
- 
   Brain.Screen.clearScreen();
   Brain.Screen.setCursor(1,1);
   Brain.Screen.print("Time to refill dispenser");
@@ -245,23 +214,32 @@ void alertRefill()
   while (MotorTilt.position(degrees) < 70)
   {}
   MotorTilt.stop();
- 
-  Brain.playNote(4, 0, 250);
-  Brain.playNote(4, 2, 250);
-  Brain.playNote(4, 4, 250);
-  Brain.playNote(4, 0, 250);
-  Brain.playNote(3, 5, 250);
-  Brain.playNote(3, 6, 250);
-  Brain.playNote(4, 0, 500);
+  
+ int melody[][3] = {
+  {4, 0, 250},
+  {4, 2, 250},
+  {4, 4, 250},
+  {4, 0, 250},
+  {3, 5, 250},
+  {3, 6, 250},
+  {4, 0, 500},
 
-
-  Brain.playNote(3, 5, 250);
-  Brain.playNote(3, 5, 250);
-  Brain.playNote(4, 2, 250);
-  Brain.playNote(4, 4, 250);
-  Brain.playNote(4, 0, 500);
+  {3, 5, 250},
+  {3, 5, 250},
+  {4, 2, 250},
+  {4, 4, 250},
+  {4, 0, 500}
+  };
+  
+  int melodyLength = sizeof(melody) / sizeof(melody[0]);
+  for (int i = 0; i < melodyLength; i++) {
+    Brain.playNote(
+      melody[i][0], // octave
+      melody[i][1], // note
+      melody[i][2]  // duration
+    );
+  }
 }
-
 
 void dispense()
 {
@@ -273,10 +251,9 @@ void dispense()
   wait(0.5,seconds);
 }
 
-
 void drawer(int direction)
 {
-  if (direction == 0) // Extend
+  if (direction) // Extend
   {
     MotorDrawer.spin(forward, 25, pct);
     while (MotorDrawer.position(degrees) < 45)
@@ -284,7 +261,7 @@ void drawer(int direction)
     MotorDrawer.stop();
     MotorDrawer.setPosition(0, degrees);
   }
-  else if (direction == 1) // Retract
+  else  // Retract
   {
     MotorDrawer.spin(reverse, 25, pct);
     while (MotorDrawer.position(degrees) > -45)
@@ -293,7 +270,6 @@ void drawer(int direction)
     MotorDrawer.setPosition(0, degrees);
   }
 }
-
 
 bool generateReport (int countTouchSensor)
 {
@@ -304,7 +280,6 @@ bool generateReport (int countTouchSensor)
     }
     return hasSkipped;
 }
-
 
 void printReport (bool missedTimes, int numMissedTimes)
 {
@@ -327,17 +302,12 @@ void printReport (bool missedTimes, int numMissedTimes)
   }
 }
 
-
-
-
 int main()
 {
-  // Initializing Robot Configuration. DO NOT REMOVE!
+  // Initializing Robot Configuration
   vexcodeInit();
   configureAllSensors();
   // Repeat until dispenser is empty
-
-
   int skipCounter = 0;
   int time = setAlarm();
   Brain.Timer.reset();
@@ -347,14 +317,12 @@ int main()
   Brain.Screen.newLine();
   Brain.Screen.print("been set!");
 
-
-  // Set as 5 for the purpose of the demo
+  // Set as 3 cycles for the purpose of the demo
   for(int i = 0; i < 3; i++)
   {
     while(Brain.Timer.value() < time)
     {}
     playAlarm(); // Already has if bumper pressing then jingle stops
-
 
     while(!Bumper5.pressing() && !TouchLED7.pressing())
     {}
@@ -381,7 +349,6 @@ int main()
     Brain.Screen.setCursor(1,1);
     time = setAlarm();
 
-
     Brain.Timer.reset();
     Brain.Screen.clearScreen();
     Brain.Screen.newLine();
@@ -399,7 +366,6 @@ int main()
       drawer(1);
     }
   }
-
 
   alertRefill();  
   Brain.programStop();
