@@ -3,6 +3,8 @@
 
 This repository contains embedded software for an automatic medicine dispenser built using VEXIQ robot parts. This project aimed to solve the problem of poor medication adherance. It stored the medication in a custom container and automatically dispensed them according to an alarm set by the user. It also provided feedback based on how consistent the user was at taking their medication.
 
+Complete 50 Page Report of Project [here](https://docs.google.com/document/d/1g_MpxRCvDjm2_fgTHSZ8ViZm7K9g0R3Ne8KLXBIBrbM/edit?usp=sharing)
+
 The system consists of:
 - A custom-designed dispenser plate and cover to guide and release medicine
 - A VEX IQ brain running embedded control software
